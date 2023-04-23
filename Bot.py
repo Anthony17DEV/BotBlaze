@@ -10,9 +10,9 @@ sleep(5)
 
 # Mensagens Padrao
 analise = 'Analisando possivel entrada...'
-win = 'Green do Double'
-win_branco = '⬜ Green do branco ⬜'
-loss = 'Essa não deu!\nPare e volte mais tarde'
+win = 'Winzada 🟩'
+win_branco = '⬜ Winzada no branco ⬜'
+loss = 'Infelizmanete não foi dessa vez ❌\nPare por um momento e volte mais tarde'
 nao_confirmacao = 'Não confirmou Entrada \nAguarde o próximo sinal'
 
 
@@ -77,13 +77,13 @@ while True:
         historico.append(ultimo)
         padrao = historico[-4:]
         print(padrao)
-        confirmacao = f'{simbolo[padrao[0]]} Entrada confirmada no {cor[padrao[0]]}\n{simbolo[0]} Proteção no branco'
+        confirmacao = f'{simbolo[padrao[0]]} Entrada confirmada no {cor[padrao[0]]}\n{simbolo[0]} Proteção no branco' #Depois testar trocar os 0 por 1
         gale1 = f'Vamos para o gale 1 \n{simbolo[padrao[0]]} {cor[padrao[0]]}\n{simbolo[0]} Proteção no Branco'
-        gale2 = f'Vamos para o gale 2 \n{simbolo[padrao[0]]} {cor[padrao[0]]}\n{simbolo[0]} Proteção no Branco'
+        gale2 = f'Cuidado! Vamos para o gale 2 \n{simbolo[padrao[0]]} {cor[padrao[0]]}\n{simbolo[0]} Proteção no Branco'
 
         # Como as estratégias sempre jogam na cor contraria, resolvi colocar as cores
         # Vermelha e Preta em indices diferentes para aproveirar a logica
-        if padrao == [1, 1, 1, 1] or padrao == [2, 2, 2, 2] or padrao == [1, 2, 1, 2] or padrao == [2, 1, 2, 1]:
+        if padrao == [1, 1, 1, 1] or padrao == [2, 2, 2, 2] or padrao == [1, 2, 1, 2] or padrao == [2, 1, 2, 1] or padrao == [2, 2, 1, 1] or padrao == [1, 1, 2, 2] or padrao == [1, 1, 1, 2] or padrao == [2, 2, 2, 1] or padrao == [2, 2, 1, 2] or padrao == [1, 1, 2, 1]:
             enviar_mensagem(analise)
             esperar()
             sleep(1.5)
