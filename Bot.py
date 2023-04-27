@@ -9,14 +9,32 @@ driver.get('https://blaze.com/pt/games/double')
 sleep(5)
 
 # Mensagens Padrao
-analise = 'Analisando possivel entrada...'
-win = 'Winzada 🟩'
-win_branco = '⬜ Winzada no branco ⬜'
+analise = 'Analisando possivel entrada... 🔍'
+win = 'Winzada 🟩🤑'
+win_branco = '⬜ Winzada no branco ⬜🤑'
 loss = 'Infelizmanete não foi dessa vez ❌\nPare por um momento e volte mais tarde'
-nao_confirmacao = 'Não confirmou Entrada \nAguarde o próximo sinal'
+nao_confirmacao = 'Entrada não confirmada \nAguarde o próximo sinal'
+branco = 'Possibilidade de branco nas proximas casas 👀'
+acertou_branco = False
 
+vitorias = 0
+derrotas = 0
+brancos = 0
 
-##############################
+def atualizar_contagem(resultado):
+    global vitorias,derrotas,brancos
+    if resultado == "vitoria":
+        vitorias += 1
+    elif resultado == "derrota":
+        derrotas += 1
+    elif resultado == "white":
+        brancos += 1
+
+    total_tentativas = vitorias + derrotas
+    assertividade = vitorias / total_tentativas if total_tentativas > 0 else 0
+    contagem = f"Wins: {vitorias} 💸\nLoss: {derrotas} 🚫\nBrancos: {brancos} ⚪\nAssertividade: {assertividade:.2%}"
+    enviar_mensagem(contagem)
+
 
 def esperar():
     while True:
@@ -77,13 +95,14 @@ while True:
         historico.append(ultimo)
         padrao = historico[-4:]
         print(padrao)
-        confirmacao = f'{simbolo[padrao[0]]} Entrada confirmada no {cor[padrao[0]]}\n{simbolo[0]} Proteção no branco' #Depois testar trocar os 0 por 1
+        confirmacao = f'{simbolo[padrao[0]]} Entrada confirmada no {cor[padrao[0]]}\n{simbolo[0]} Proteção no branco'
         gale1 = f'Vamos para o gale 1 \n{simbolo[padrao[0]]} {cor[padrao[0]]}\n{simbolo[0]} Proteção no Branco'
         gale2 = f'Cuidado! Vamos para o gale 2 \n{simbolo[padrao[0]]} {cor[padrao[0]]}\n{simbolo[0]} Proteção no Branco'
 
         # Como as estratégias sempre jogam na cor contraria, resolvi colocar as cores
-        # Vermelha e Preta em indices diferentes para aproveirar a logica
-        if padrao == [1, 1, 1, 1] or padrao == [2, 2, 2, 2] or padrao == [1, 2, 1, 2] or padrao == [2, 1, 2, 1] or padrao == [2, 2, 1, 1] or padrao == [1, 1, 2, 2] or padrao == [1, 1, 1, 2] or padrao == [2, 2, 2, 1] or padrao == [2, 2, 1, 2] or padrao == [1, 1, 2, 1]:
+        # Vermelha e Preta em indices diferentes para aproveitar a logica
+
+        if padrao == [1, 1, 1, 1] or padrao == [2, 2, 2, 2]:
             enviar_mensagem(analise)
             esperar()
             sleep(1.5)
@@ -96,9 +115,116 @@ while True:
                     ultimo_ = retornar_ultimo()
                     if ultimo_ != ultimo and ultimo_ != 0:
                         enviar_mensagem(win)
+                        atualizar_contagem("vitoria")
                         break
                     elif ultimo_ == 0:
                         enviar_mensagem(win_branco)
+                        atualizar_contagem("vitoria") and atualizar_contagem("white")
+                        break
+                    else:
+                        if martin_gale(gale1, ultimo):
+                            break
+                        else:
+                            if martin_gale(gale2, ultimo):
+                                break
+                            else:
+                                enviar_mensagem(loss)
+                                atualizar_contagem("derrota")
+                                break
+                else:
+                    enviar_mensagem(nao_confirmacao)
+                    break
+
+        elif padrao == [1, 2, 1, 2] or padrao == [2, 1, 2, 1]:
+            enviar_mensagem(analise)
+            esperar()
+            sleep(1.5)
+            ultimo = retornar_ultimo()
+            while True:
+                if ultimo == padrao[0]:
+                    enviar_mensagem(confirmacao)
+                    esperar()
+                    sleep(1.5)
+                    ultimo_ = retornar_ultimo()
+                    if ultimo_ != ultimo and ultimo_ != 0:
+                        enviar_mensagem(win)
+                        atualizar_contagem("vitoria")
+                        break
+                    elif ultimo_ == 0:
+                        enviar_mensagem(win_branco)
+                        atualizar_contagem("vitoria") and atualizar_contagem("white")
+                        break
+                    else:
+                        if martin_gale(gale1, ultimo):
+                            break
+                        else:
+                            if martin_gale(gale2, ultimo):
+                                break
+                            else:
+                                enviar_mensagem(loss)
+                                atualizar_contagem("derrota")
+                                break
+                else:
+                    enviar_mensagem(nao_confirmacao)
+                    break
+
+        elif padrao == [1, 1, 2, 2] or padrao == [2, 2, 1, 1]:
+            enviar_mensagem(analise)
+            esperar()
+            sleep(1.5)
+            ultimo = retornar_ultimo()
+            confirmacao2 = f'{simbolo[padrao[2]]} Entrada confirmada no {cor[padrao[2]]}\n{simbolo[0]} Proteção no branco'
+            gale1 = f'Vamos para o gale 1 \n{simbolo[padrao[2]]} {cor[padrao[2]]}\n{simbolo[0]} Proteção no Branco'
+            gale2 = f'Cuidado! Vamos para o gale 2 \n{simbolo[padrao[2]]} {cor[padrao[2]]}\n{simbolo[0]} Proteção no Branco'
+            while True:
+                if ultimo == padrao[0]:
+                    enviar_mensagem(confirmacao2)
+                    esperar()
+                    sleep(1.5)
+                    ultimo_ = retornar_ultimo()
+                    if ultimo_ != padrao[2] and ultimo_ != 0:
+                        enviar_mensagem(win)
+                        atualizar_contagem("vitoria")
+                        break
+                    elif ultimo_ == 0:
+                        enviar_mensagem(win_branco)
+                        atualizar_contagem("vitoria") and atualizar_contagem("white")
+                        break
+                    else:
+                        if martin_gale(gale1, padrao[2]):
+                            break
+                        else:
+                            if martin_gale(gale2, padrao[2]):
+                                break
+                            else:
+                                enviar_mensagem(loss)
+                                atualizar_contagem("derrota")
+                                break
+                else:
+                    enviar_mensagem(nao_confirmacao)
+                    break
+
+        elif padrao == [2, 2, 1, 2] or padrao == [1, 1, 2, 1]: #aposentado devido ser muito inconsistente e apresentar muitos loss
+            enviar_mensagem(analise)
+            esperar()
+            sleep(1.5)
+            ultimo = retornar_ultimo()
+            confirmacao2 = f'{simbolo[padrao[0]]} Entrada confirmada no {cor[padrao[0]]}\n{simbolo[0]} Proteção no branco'
+            gale1 = f'Vamos para o gale 1 \n{simbolo[padrao[0]]} {cor[padrao[1]]}\n{simbolo[0]} Proteção no Branco'
+            gale2 = f'Cuidado! Vamos para o gale 2 \n{simbolo[padrao[0]]} {cor[padrao[0]]}\n{simbolo[0]} Proteção no Branco'
+            while True:
+                if ultimo == padrao[0]:
+                    enviar_mensagem(confirmacao2)
+                    esperar()
+                    sleep(1.5)
+                    ultimo_ = retornar_ultimo()
+                    if ultimo_ != ultimo and ultimo_ != 0:
+                        enviar_mensagem(win)
+                        atualizar_contagem("vitoria")
+                        break
+                    elif ultimo_ == 0:
+                        enviar_mensagem(win_branco)
+                        atualizar_contagem("vitoria") and atualizar_contagem("white")
                         break
                     else:
                         if martin_gale(gale1, ultimo):
@@ -109,10 +235,59 @@ while True:
                             else:
                                 enviar_mensagem(loss)
                                 break
-
                 else:
                     enviar_mensagem(nao_confirmacao)
                     break
+
+        elif padrao == [2, 2, 2, 1] or padrao == [1, 1, 1, 2] or padrao == [1, 2, 2, 2] or padrao == [2, 1, 1, 1]:
+            enviar_mensagem(analise)
+            esperar()
+            sleep(1.5)
+            ultimo = retornar_ultimo()
+            # determina a cor em que apostar
+            cor_aposta = 0
+            for i in range(3):
+                if padrao[i] == padrao[i + 1]:
+                    cor_aposta = padrao[i]
+                    break
+            if cor_aposta == 2:
+                confirmacao2 = f'{simbolo[2]} Entrada confirmada no {cor[2]}\n{simbolo[0]} Proteção no branco'
+            else:
+                confirmacao2 = f'{simbolo[1]} Entrada confirmada no {cor[1]}\n{simbolo[0]} Proteção no branco'
+
+            gale1 = f'Vamos para o gale 1 \n{simbolo[cor_aposta]} {cor[cor_aposta]}\n{simbolo[0]} Proteção no Branco'
+            gale2 = f'Cuidado! Vamos para o gale 2 \n{simbolo[cor_aposta]} {cor[cor_aposta]}\n{simbolo[0]} Proteção no Branco'
+            while True:
+                if ultimo == padrao[0]:
+                    enviar_mensagem(confirmacao2)
+                    esperar()
+                    sleep(1.5)
+                    ultimo_ = retornar_ultimo()
+                    if ultimo_ == cor_aposta:
+                        enviar_mensagem(win)
+                        atualizar_contagem("vitoria")
+                        break
+                    elif ultimo_ == 0:
+                        enviar_mensagem(win_branco)
+                        atualizar_contagem("white") and atualizar_contagem("vitoria")
+                        break
+                    else:
+                        if martin_gale(gale1, cor_aposta):
+                            break
+                        else:
+                            if martin_gale(gale2, cor_aposta):
+                                break
+                            else:
+                                enviar_mensagem(loss)
+                                atualizar_contagem("derrota")
+                                break
+                else:
+                    enviar_mensagem(nao_confirmacao)
+                    break
+
+        if ultimo == 0:
+            enviar_mensagem(branco)
+
     except Exception as e:
         print(e)
         driver.get('https://blaze.com/pt/games/double')
