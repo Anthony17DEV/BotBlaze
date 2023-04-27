@@ -15,7 +15,7 @@ win_branco = '⬜ Winzada no branco ⬜🤑'
 loss = 'Infelizmanete não foi dessa vez ❌\nPare por um momento e volte mais tarde'
 nao_confirmacao = 'Entrada não confirmada \nAguarde o próximo sinal'
 branco = 'Possibilidade de branco nas proximas casas 👀'
-acertou_branco = False
+
 
 vitorias = 0
 derrotas = 0
@@ -28,6 +28,7 @@ def atualizar_contagem(resultado):
     elif resultado == "derrota":
         derrotas += 1
     elif resultado == "white":
+        vitorias += 1
         brancos += 1
 
     total_tentativas = vitorias + derrotas
@@ -119,13 +120,15 @@ while True:
                         break
                     elif ultimo_ == 0:
                         enviar_mensagem(win_branco)
-                        atualizar_contagem("vitoria") and atualizar_contagem("white")
+                        atualizar_contagem("white")
                         break
                     else:
                         if martin_gale(gale1, ultimo):
+                            atualizar_contagem("vitoria")
                             break
                         else:
                             if martin_gale(gale2, ultimo):
+                                atualizar_contagem("vitoria")
                                 break
                             else:
                                 enviar_mensagem(loss)
@@ -152,13 +155,15 @@ while True:
                         break
                     elif ultimo_ == 0:
                         enviar_mensagem(win_branco)
-                        atualizar_contagem("vitoria") and atualizar_contagem("white")
+                        atualizar_contagem("vitoria" and "white")
                         break
                     else:
                         if martin_gale(gale1, ultimo):
+                            atualizar_contagem("vitoria")
                             break
                         else:
                             if martin_gale(gale2, ultimo):
+                                atualizar_contagem("vitoria")
                                 break
                             else:
                                 enviar_mensagem(loss)
@@ -188,13 +193,15 @@ while True:
                         break
                     elif ultimo_ == 0:
                         enviar_mensagem(win_branco)
-                        atualizar_contagem("vitoria") and atualizar_contagem("white")
+                        atualizar_contagem("white")
                         break
                     else:
                         if martin_gale(gale1, padrao[2]):
+                            atualizar_contagem("vitoria")
                             break
                         else:
                             if martin_gale(gale2, padrao[2]):
+                                atualizar_contagem("vitoria")
                                 break
                             else:
                                 enviar_mensagem(loss)
@@ -204,7 +211,7 @@ while True:
                     enviar_mensagem(nao_confirmacao)
                     break
 
-        elif padrao == [2, 2, 1, 2] or padrao == [1, 1, 2, 1]: #aposentado devido ser muito inconsistente e apresentar muitos loss
+        elif padrao == [2, 2, 1, 2] or padrao == [1, 1, 2, 1]:
             enviar_mensagem(analise)
             esperar()
             sleep(1.5)
@@ -224,58 +231,15 @@ while True:
                         break
                     elif ultimo_ == 0:
                         enviar_mensagem(win_branco)
-                        atualizar_contagem("vitoria") and atualizar_contagem("white")
+                        atualizar_contagem("white")
                         break
                     else:
                         if martin_gale(gale1, ultimo):
+                            atualizar_contagem("vitoria")
                             break
                         else:
                             if martin_gale(gale2, ultimo):
-                                break
-                            else:
-                                enviar_mensagem(loss)
-                                break
-                else:
-                    enviar_mensagem(nao_confirmacao)
-                    break
-
-        elif padrao == [2, 2, 2, 1] or padrao == [1, 1, 1, 2] or padrao == [1, 2, 2, 2] or padrao == [2, 1, 1, 1]:
-            enviar_mensagem(analise)
-            esperar()
-            sleep(1.5)
-            ultimo = retornar_ultimo()
-            # determina a cor em que apostar
-            cor_aposta = 0
-            for i in range(3):
-                if padrao[i] == padrao[i + 1]:
-                    cor_aposta = padrao[i]
-                    break
-            if cor_aposta == 2:
-                confirmacao2 = f'{simbolo[2]} Entrada confirmada no {cor[2]}\n{simbolo[0]} Proteção no branco'
-            else:
-                confirmacao2 = f'{simbolo[1]} Entrada confirmada no {cor[1]}\n{simbolo[0]} Proteção no branco'
-
-            gale1 = f'Vamos para o gale 1 \n{simbolo[cor_aposta]} {cor[cor_aposta]}\n{simbolo[0]} Proteção no Branco'
-            gale2 = f'Cuidado! Vamos para o gale 2 \n{simbolo[cor_aposta]} {cor[cor_aposta]}\n{simbolo[0]} Proteção no Branco'
-            while True:
-                if ultimo == padrao[0]:
-                    enviar_mensagem(confirmacao2)
-                    esperar()
-                    sleep(1.5)
-                    ultimo_ = retornar_ultimo()
-                    if ultimo_ == cor_aposta:
-                        enviar_mensagem(win)
-                        atualizar_contagem("vitoria")
-                        break
-                    elif ultimo_ == 0:
-                        enviar_mensagem(win_branco)
-                        atualizar_contagem("white") and atualizar_contagem("vitoria")
-                        break
-                    else:
-                        if martin_gale(gale1, cor_aposta):
-                            break
-                        else:
-                            if martin_gale(gale2, cor_aposta):
+                                atualizar_contagem("vitoria")
                                 break
                             else:
                                 enviar_mensagem(loss)
@@ -284,6 +248,52 @@ while True:
                 else:
                     enviar_mensagem(nao_confirmacao)
                     break
+
+        # elif padrao == [2, 2, 2, 1] or padrao == [1, 1, 1, 2] or padrao == [1, 2, 2, 2] or padrao == [2, 1, 1, 1]:
+        #     enviar_mensagem(analise)
+        #     esperar()
+        #     sleep(1.5)
+        #     ultimo = retornar_ultimo()
+        #     # determina a cor em que apostar
+        #     cor_aposta = 0
+        #     for i in range(3):
+        #         if padrao[i] == padrao[i + 1]:
+        #             cor_aposta = padrao[i]
+        #             break
+        #     if cor_aposta == 2:
+        #         confirmacao2 = f'{simbolo[2]} Entrada confirmada no {cor[2]}\n{simbolo[0]} Proteção no branco'
+        #     else:
+        #         confirmacao2 = f'{simbolo[1]} Entrada confirmada no {cor[1]}\n{simbolo[0]} Proteção no branco'
+        #
+        #     gale1 = f'Vamos para o gale 1 \n{simbolo[cor_aposta]} {cor[cor_aposta]}\n{simbolo[0]} Proteção no Branco'
+        #     gale2 = f'Cuidado! Vamos para o gale 2 \n{simbolo[cor_aposta]} {cor[cor_aposta]}\n{simbolo[0]} Proteção no Branco'
+        #     while True:
+        #         if ultimo == padrao[0]:
+        #             enviar_mensagem(confirmacao2)
+        #             esperar()
+        #             sleep(1.5)
+        #             ultimo_ = retornar_ultimo()
+        #             if ultimo_ == cor_aposta:
+        #                 enviar_mensagem(win)
+        #                 atualizar_contagem("vitoria")
+        #                 break
+        #             elif ultimo_ == 0:
+        #                 enviar_mensagem(win_branco)
+        #                 atualizar_contagem("white") and atualizar_contagem("vitoria")
+        #                 break
+        #             else:
+        #                 if martin_gale(gale1, ultimo_):
+        #                     break
+        #                 else:
+        #                     if martin_gale(gale2, ultimo_):
+        #                         break
+        #                     else:
+        #                         enviar_mensagem(loss)
+        #                         atualizar_contagem("derrota")
+        #                         break
+        #         else:
+        #             enviar_mensagem(nao_confirmacao)
+        #             break
 
         if ultimo == 0:
             enviar_mensagem(branco)
