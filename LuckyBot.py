@@ -76,8 +76,8 @@ def martin_gale(gale, ultimo):
 
 
 def enviar_mensagem(mensagem):
-    bot_token = '6154063307:AAHp_1V0rr6VMuR_lErciT462lXGCJGYNGo'
-    chat_id = '-1001954814927'
+    bot_token = '6252114965:AAEBAQlxiSN81ZzJprzzmVeZdamGNmbbilI'
+    chat_id = '-1001930076889'
     url_blaze = '🎰 [Blaze](https://blaze.com/pt/games/double)'
     url = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={chat_id}&text={mensagem}\n{url_blaze}&parse_mode=Markdown'
     requests.get(url)
@@ -86,8 +86,8 @@ def enviar_mensagem(mensagem):
 cor = ['Branco', 'Preto', 'Vermelho']
 simbolo = ['⬜', '⬛', '🟥']
 
-print('Bot do negão inicado ...')
-enviar_mensagem('Bot do negão iniciado ...')
+print('🎰 Lucky Bot iniciado 🎰')
+enviar_mensagem('🎰 Lucky Bot iniciado 🎰')
 while True:
     try:
         print('OK')
@@ -207,42 +207,6 @@ while True:
                     enviar_mensagem(nao_confirmacao)
                     break
 
-        elif padrao == [2, 2, 2, 1] or padrao == [1, 1, 1, 2] or padrao == [1, 2, 2, 2] or padrao == [2, 1, 1, 1]: #padrão incerto e em teste
-            enviar_mensagem(analise)
-            esperar()
-            sleep(1.5)
-            ultimo = retornar_ultimo()
-            confirmacao2 = f'{simbolo[padrao[0]]} Entrada confirmada no {cor[padrao[0]]}\n{simbolo[0]} Proteção no branco'
-            gale1 = f'Vamos para o gale 1 \n{simbolo[padrao[0]]} {cor[padrao[0]]}\n{simbolo[0]} Proteção no Branco'
-            gale2 = f'Cuidado! Vamos para o gale 2 \n{simbolo[padrao[0]]} {cor[padrao[0]]}\n{simbolo[0]} Proteção no Branco'
-            while True:
-                if ultimo == padrao[0]:
-                    enviar_mensagem(confirmacao2)
-                    esperar()
-                    sleep(1.5)
-                    ultimo_ = retornar_ultimo()
-                    if ultimo_ != ultimo and ultimo_ != 0:
-                        enviar_mensagem(win)
-                        atualizar_contagem("vitoria")
-                        break
-                    elif ultimo_ == 0:
-                        enviar_mensagem(win_branco)
-                        atualizar_contagem("white")
-                        break
-                    else:
-                        if martin_gale(gale1, ultimo):
-                            break
-                        else:
-                            if martin_gale(gale2, ultimo):
-                                break
-                            else:
-                                enviar_mensagem(loss)
-                                atualizar_contagem("derrota")
-                                break
-                else:
-                    enviar_mensagem(nao_confirmacao)
-                    break            
-                    
         if ultimo == 0:
             enviar_mensagem(branco)
 
